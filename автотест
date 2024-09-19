@@ -1,0 +1,39 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+import time
+import unittest
+
+class SearchTest(unittest.TestCase):
+    def setUp(self):
+        # Установите путь к веб-драйверу
+        self.driver = webdriver.Chrome('path_to_your_webdriver')
+        self.driver.get("https://kobor.teslaserver.ru/")
+        
+    def tearDown(self):
+        self.driver.quit()
+
+    def test_search(self):
+        # Вход на сайт
+        self.driver.find_element(By.NAME, "username").send_keys("only")
+        self.driver.find_element(By.NAME, "password").send_keys("dev123only456")
+        self.driver.find_element(By.NAME, "password").send_keys(Keys.RETURN)
+        time.sleep(2)
+
+        # Тестируем запрос
+        search_query = "ваш_поисковый_запрос"  # Замените на ваш поисковый запрос
+        self.driver.find_element(By.NAME, "search").send_keys(search_query)
+        self.driver.find_element(By.NAME, "search").send_keys(Keys.RETURN)
+        time.sleep(2)
+
+        # Получение и проверка результатов поиска
+        results = self.driver.find_elements(By.CLASS_NAME, "result-item")  # Замените на актуальный класс результатов
+        assert len(results) > 0, "Результаты поиска отсутствуют"
+
+        for result in results:
+            print(result.text)
+
+        # Дополнительные тесты на порядок релевантности можно добавить здесь
+
+if __name__ == "__main__":
+    unittest.main()
