@@ -1,0 +1,41 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+import time
+import unittest
+
+class FormTest(unittest.TestCase):
+    def setUp(self):
+        # Установите путь к веб-драйверу
+        self.driver = webdriver.Chrome('path_to_your_webdriver')
+        self.driver.get("https://only.digital/projects#brief")
+        
+    def tearDown(self):
+        self.driver.quit()
+
+    def test_fill_form(self):
+        driver = self.driver
+        time.sleep(2)  # Ждем загрузки страницы
+        
+        # Пример заполнения анкеты
+        name_input = driver.find_element(By.XPATH, "//input[@name='name']")
+        email_input = driver.find_element(By.XPATH, "//input[@name='email']")
+        message_input = driver.find_element(By.XPATH, "//textarea[@name='message']")
+
+        # Заполнение полей данными "test 1", "test 2" и т.д.
+        name_input.send_keys("test 1")
+        email_input.send_keys("test1@example.com")  # Пример тестового email
+        message_input.send_keys("This is a test message.")
+
+        # Отправка формы
+        submit_button = driver.find_element(By.XPATH, "//button[@type='submit']")  # Замените на актуальный селектор кнопки
+        submit_button.click()
+
+        time.sleep(3)  # Ждем отправки формы и получения ответа
+
+        # Проверка успешной отправки. Замените селектор на актуальный элемент, который появляется после успешной отправки
+        success_message = driver.find_element(By.XPATH, "//div[@class='success-message']")
+        assert "Спасибо" in success_message.text, "Форма не отправлена успешно!"
+
+if __name__ == "__main__":
+    unittest.main()
